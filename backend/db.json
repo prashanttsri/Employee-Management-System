@@ -1,0 +1,32 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "position": "Developer",
+      "salary": 60000
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "position": "Designer",
+      "salary": 55000
+    }
+  ],
+  "attendance": [
+    {
+      "id": 1,
+      "employeeId": 1,
+      "date": "2025-07-01",
+      "status": "Present"
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "employeeId": 1,
+      "period": "2025 Q1",
+      "score": 4.5
+    }
+  ]
+}

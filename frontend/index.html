@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Management System</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4">
+        <h1 class="text-2xl font-semibold">Employee Management System</h1>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4 flex-1 w-full">
+
+        <!-- Search Bar -->
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search employee..."
+            onkeyup="searchEmployee()"
+            class="p-2 rounded border w-full mb-4"
+        />
+
+        <!-- Employee List -->
+        <div
+            id="employeeList"
+            class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+        >
+
+            <!-- Example Card (replace or render dynamically) -->
+            <div
+                class="employee-card p-4 bg-white rounded-xl shadow hover:shadow-xl transition duration-300"
+            >
+                <h2 class="employee-name text-xl font-medium">Jane Doe</h2>
+                <p class="text-sm text-gray-600">Software Engineer</p>
+                <p class="text-sm text-gray-600">Joined: 12 Jan 2023</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white text-center p-4 rounded-t-xl">
+        © 2025 Employee Management System. Developed by Prashant Srivastava.
+    </footer>
+
+    <!-- Script -->
+    <script src="main.js"></script>
+</body>
+</html>
