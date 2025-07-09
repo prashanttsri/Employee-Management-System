@@ -1,62 +1,48 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const navLinks = document.querySelectorAll('nav a');
-  const sections = document.querySelectorAll('main section');
+// LOGIN PAGE LOGIC
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+  loginForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-  navLinks.forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const target = link.getAttribute('href').substring(1);
-      sections.forEach(sec => sec.hidden = (sec.id !== target));
-      navLinks.forEach(l => l.classList.remove('font-bold'));
-      link.classList.add('font-bold');
-
-      if (target === 'employees') loadEmployees();
-      else if (target === 'attendance') loadAttendance();
-      else if (target === 'payroll') loadPayroll();
-      else if (target === 'reviews') loadReviews();
-    });
+    if (email === 'admin@example.com' && password === 'admin123') {
+      window.location.href = 'dashboard.html';
+    } else {
+      alert('Invalid credentials. Try: admin@example.com / admin123');
+    }
   });
+}
 
-  const loadEmployees = () => fetch('/api/employees')
-      .then(r => r.json())
-      .then(data => {
-        const div = document.getElementById('employeeList');
-        if (!data.length) return div.innerHTML = '<p class="p-4">No employees yet.</p>';
-        div.innerHTML = data.map(emp => `
-          <div class="p-2 border-b">${emp.name} — ${emp.position} — ₹${emp.salary}</div>
-        `).join('');
+// LEAVE FORM LOGIC
+const leaveForm = document.getElementById('leaveForm');
+if (leaveForm) {
+  leaveForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const leaveData = {
+      empId: document.getElementById('empId').value,
+      startDate: document.getElementById('startDate').value,
+      endDate: document.getElementById('endDate').value,
+      reason: document.getElementById('reason').value,
+    };
+
+    try {
+      const res = await fetch('http://localhost:3000/leaves/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(leaveData),
       });
 
-  const loadAttendance = () => fetch('/api/attendance')
-      .then(r => r.json())
-      .then(data => {
-        const div = document.getElementById('attendanceList');
-        if (!data.length) return div.innerHTML = '<p class="p-4">No attendance records.</p>';
-        div.innerHTML = data.map(a => `
-          <div class="p-2 border-b">ID:${a.employeeId} — ${a.date} — ${a.status}</div>
-        `).join('');
-      });
-
-  const loadPayroll = () => fetch('/api/employees')
-      .then(r => r.json())
-      .then(data => {
-        const div = document.getElementById('payrollList');
-        if (!data.length) return div.innerHTML = '<p class="p-4">No payroll data.</p>';
-        div.innerHTML = data.map(emp => `
-          <div class="p-2 border-b">${emp.name} — Monthly Salary: ₹${emp.salary}</div>
-        `).join('');
-      });
-
-  const loadReviews = () => fetch('/api/reviews')
-      .then(r => r.json())
-      .then(data => {
-        const div = document.getElementById('reviewList');
-        if (!data.length) return div.innerHTML = '<p class="p-4">No reviews on record.</p>';
-        div.innerHTML = data.map(rev => `
-          <div class="p-2 border-b">ID:${rev.employeeId} — ${rev.period} — Score: ${rev.score}</div>
-        `).join('');
-      });
-
-  // Load default section
-  loadEmployees();
-});
+      const result = await res.json();
+      if (result.success) {
+        alert('Leave applied successfully!');
+        leaveForm.reset();
+      } else {
+        alert('Something went wrong');
+      }
+    } catch (error) {
+      alert('Server error!');
+    }
+  });
+}
