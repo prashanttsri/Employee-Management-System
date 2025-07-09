@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Leave Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payroll Management</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -15,8 +15,8 @@
       <a href="dashboard.html" class="hover:text-yellow-300">Dashboard</a>
       <a href="employees.html" class="hover:text-yellow-300">Employee Management</a>
       <a href="attendance.html" class="hover:text-yellow-300">Attendance</a>
-      <a href="payroll.html" class="hover:text-yellow-300">Payroll</a>
-      <a href="leave.html" class="text-yellow-300 font-semibold">Leave Management</a>
+      <a href="payroll.html" class="text-yellow-300 font-semibold">Payroll</a>
+      <a href="leave.html" class="hover:text-yellow-300">Leave Management</a>
       <a href="performance.html" class="hover:text-yellow-300">Performance</a>
       <a href="reports.html" class="hover:text-yellow-300">Reports</a>
       <a href="notifications.html" class="hover:text-yellow-300">Notifications</a>
@@ -26,27 +26,33 @@
 
   <!-- Main Content -->
   <main class="flex-1 p-8">
-    <h1 class="text-3xl font-bold mb-6">Leave Requests</h1>
+    <h1 class="text-3xl font-bold mb-6">Payroll Management</h1>
+
+    <div class="mb-4">
+      <button class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        Generate Payroll
+      </button>
+    </div>
 
     <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
       <thead class="bg-blue-100">
         <tr>
           <th class="py-3 px-6 text-left">Employee</th>
-          <th class="py-3 px-6 text-left">From</th>
-          <th class="py-3 px-6 text-left">To</th>
-          <th class="py-3 px-6 text-left">Reason</th>
-          <th class="py-3 px-6 text-left">Status</th>
+          <th class="py-3 px-6 text-left">Month</th>
+          <th class="py-3 px-6 text-left">Base Salary</th>
+          <th class="py-3 px-6 text-left">Deductions</th>
+          <th class="py-3 px-6 text-left">Net Pay</th>
         </tr>
       </thead>
       <tbody>
         <tr class="border-b hover:bg-gray-50">
-          <td class="py-3 px-6">Jane Smith</td>
-          <td class="py-3 px-6">2025-07-15</td>
-          <td class="py-3 px-6">2025-07-17</td>
-          <td class="py-3 px-6">Medical</td>
-          <td class="py-3 px-6 text-yellow-600 font-semibold">Pending</td>
+          <td class="py-3 px-6">John Doe</td>
+          <td class="py-3 px-6">July 2025</td>
+          <td class="py-3 px-6">₹50,000</td>
+          <td class="py-3 px-6">₹5,000</td>
+          <td class="py-3 px-6">₹45,000</td>
         </tr>
-        <!-- Add more leave requests here -->
+        <!-- Add more payroll rows here -->
       </tbody>
     </table>
   </main>
