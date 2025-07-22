@@ -1,84 +1,82 @@
-import express from 'express';
-import path from 'path';
-import { Low, JSONFile } from 'lowdb';
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
 
 const app = express();
-const __dirname = path.resolve();
+const adapter = new FileSync('db.json');
+const db = low(adapter);
 
-// Database setup
-const adapter = new JSONFile(path.join(__dirname, 'backend', 'db.json'));
-const db = new Low(adapter);
-await db.read();
-db.data ||= { employees: [], attendance: [], reviews: [] };
-const save = () => db.write();
+app.use(cors());
+app.use(bodyParser.json());
 
-app.use(express.json());
+// Set default structure (add leaves too)
+db.defaults({
+  employees: [],
+  attendance: [],
+  payroll: [],
+  performance: [],
+  leaves: []
+}).write();
 
-// Employees CRUD
-app.get('/api/employees', (req, res) => res.json(db.data.employees));
-
-app.post('/api/employees', (req, res) => {
-  const employee = { id: Date.now(), ...req.body };
-  db.data.employees.push(employee);
-  save();
-  res.json(employee);
+// ==================== Employee Routes ====================
+app.get('/employees', (req, res) => {
+  const data = db.get('employees').value();
+  res.send(data);
 });
 
-app.put('/api/employees/:id', (req, res) => {
-  const emp = db.data.employees.find(e => e.id == req.params.id);
-  if (!emp) return res.status(404).json({ error: 'Not found' });
-  Object.assign(emp, req.body);
-  save();
-  res.json(emp);
+// ==================== Attendance Routes ====================
+app.get('/attendance', (req, res) => {
+  const data = db.get('attendance').value();
+  res.send(data);
 });
 
-app.delete('/api/employees/:id', (req, res) => {
-  db.data.employees = db.data.employees.filter(e => e.id != req.params.id);
-  save();
-  res.json({ success: true });
+// ==================== Payroll Routes ====================
+app.get('/payroll', (req, res) => {
+  const data = db.get('payroll').value();
+  res.send(data);
 });
 
-// Attendance
-app.get('/api/attendance', (req, res) => res.json(db.data.attendance));
-
-app.post('/api/attendance', (req, res) => {
-  const log = { id: Date.now(), ...req.body };
-  db.data.attendance.push(log);
-  save();
-  res.json(log);
+// ==================== Performance Routes ====================
+app.get('/performance', (req, res) => {
+  const data = db.get('performance').value();
+  res.send(data);
 });
 
-// Performance Reviews
-app.get('/api/reviews', (req, res) => res.json(db.data.reviews));
+// ==================== Leave Management Routes ====================
 
-app.post('/api/reviews', (req, res) => {
-  const rev = { id: Date.now(), ...req.body };
-  db.data.reviews.push(rev);
-  save();
-  res.json(rev);
+// Apply for leave
+app.post('/leaves/apply', (req, res) => {
+  const { empId, startDate, endDate, reason } = req.body;
+  const leave = {
+    id: Date.now(),
+    empId,
+    startDate,
+    endDate,
+    reason,
+    status: 'Pending'
+  };
+  db.get('leaves').push(leave).write();
+  res.send({ success: true, leave });
 });
 
-// Payroll (simple static salary pulled from employee record)
-app.get('/api/payroll/:id', (req, res) => {
-  const emp = db.data.employees.find(e => e.id == req.params.id);
-  if (!emp) return res.status(404).json({ error: 'Employee not found' });
-  res.json({ employeeId: emp.id, salary: emp.salary || 0 });
+// Get all leaves
+app.get('/leaves/all', (req, res) => {
+  const leaves = db.get('leaves').value();
+  res.send(leaves);
 });
 
-// Serve frontend
-app.use(express.static(path.join(__dirname, 'frontend')));
+// Update leave status
+app.post('/leaves/update-status', (req, res) => {
+  const { id, status } = req.body;
+  db.get('leaves').find({ id }).assign({ status }).write();
+  res.send({ success: true });
+});
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Employee Management System running on port ${PORT}`));
-// Instant, case‑insensitive employee search
-function searchEmployee() {
-  const query = document.getElementById("searchInput").value.toLowerCase();
-  const employees = document.querySelectorAll(".employee-card");
-
-  employees.forEach((emp) => {
-    const name = emp
-      .querySelector(".employee-name")
-      .textContent.toLowerCase();
-    emp.style.display = name.includes(query) ? "" : "none";
-  });
-}
+// ==================== Server Start ====================
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
+//server.js file
